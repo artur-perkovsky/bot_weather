@@ -5,6 +5,7 @@ import com.telegramBot.bot_weather.entity.User;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
+import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
 import com.telegramBot.bot_weather.service.manager.StartManager;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class CommandHandler extends AbstractHandler {
 
     private final StartManager startManager;
     private final MainManager mainManager;
+    private final CityManager cityManager;
     private final UserRepo userRepo;
 
     @Override
@@ -26,29 +28,34 @@ public class CommandHandler extends AbstractHandler {
         var message = (Message) botApiObject;
         Long chatId = message.getChatId();
         String command = message.getText();
-        switch (command) {
-            case "/start": {
-                if (userRepo.existsByChatID(chatId)) {
-                   var user = userRepo.findByChatID(chatId);
-                   user.setUserStatus(UserStatus.CITY);
-                   userRepo.save(user);
-                    return startManager.answerCommand(message, bot);
-                } else {
-                    userRepo.save(User.builder()
-                            .chatID(message.getChatId())
-                            .firstName(message.getFrom().getFirstName())
-                            .userStatus(UserStatus.CITY)
-                            .build());
-                    return startManager.answerCommand(message, bot);
+       try{
+            switch (command) {
+                case "/start": {
+                    if (userRepo.existsByChatID(chatId)) {
+                        var user = userRepo.findByChatID(chatId);
+                        user.setUserStatus(UserStatus.CITY);
+                        userRepo.save(user);
+                        return startManager.answerCommand(message, bot);
+                    } else {
+                        userRepo.save(User.builder()
+                                .chatID(message.getChatId())
+                                .firstName(message.getFrom().getFirstName())
+                                .userStatus(UserStatus.CITY)
+                                .build());
+                        return startManager.answerCommand(message, bot);
+                    }
+                }
+                case "/menu": {
+                    var user = userRepo.findByChatID(chatId);
+                    user.setUserStatus(UserStatus.MENU);
+                    userRepo.save(user);
+                    return mainManager.answerCommand(message, bot);
                 }
             }
-            case "/menu": {
-                var user = userRepo.findByChatID(chatId);
-                user.setUserStatus(UserStatus.MENU);
-                userRepo.save(user);
-                return mainManager.answerCommand(message, bot);
-            }
-        }
-        return null;
+        }catch (NullPointerException e){
+           System.out.printf("Message Null" + e);
+           return null;
+       }
+       return null;
     }
 }

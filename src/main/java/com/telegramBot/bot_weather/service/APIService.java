@@ -4,7 +4,7 @@ import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.config.APIConfig;
 import com.telegramBot.bot_weather.repository.CityRepo;
 import com.telegramBot.bot_weather.repository.UserRepo;
-import com.telegramBot.bot_weather.service.forecaste.Forecast;
+import com.telegramBot.bot_weather.dto.forecaste.Forecast;
 import com.telegramBot.bot_weather.service.manager.CityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class APIService {
         return null;
     }
 
-    public Forecast getWeather(Message message, Bot bot, String city) {
+    public Forecast getWeather(Message message, String city) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             try {

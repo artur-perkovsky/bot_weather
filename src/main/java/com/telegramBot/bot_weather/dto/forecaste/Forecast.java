@@ -1,4 +1,4 @@
-package com.telegramBot.bot_weather.service.forecaste;
+package com.telegramBot.bot_weather.dto.forecaste;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -10,8 +10,11 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Current {
+public class Forecast {
 
-    @JsonProperty("temp_c")
-    private String temp;
+    @JsonProperty("current")
+    private Current current;
+
+    @JsonProperty("location")
+    private Location location;
 }

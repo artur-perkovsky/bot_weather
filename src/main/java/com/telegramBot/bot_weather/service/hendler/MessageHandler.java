@@ -29,20 +29,22 @@ public class MessageHandler extends AbstractHandler {
     public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
         var message = (Message) botApiObject;
         var user = userRepo.findByChatID(message.getChatId());
-
-        try {
-            switch (user.getUserStatus()) {
-                case CITY -> {
-                    String city = message.getText();
-                    return apiService.checkCity(message, city, bot);
+        if (message != null){
+            try {
+                switch (user.getUserStatus()) {
+                    case CITY -> {
+                        String city = message.getText();
+                        return apiService.checkCity(message, city, bot);
+                    }
+                    case MENU -> {
+                        return unsupportedCommandManage.answer(message, bot);
+                    }
                 }
-                case MENU -> {
-                    return unsupportedCommandManage.answer(message, bot);
-                }
+            } catch (NullPointerException e) {
+                log.info("exception Status" + e);
             }
-        } catch (NullPointerException e) {
-            log.info("exeption Status" + e);
+            return mainManager.answerCommand(message, bot);
         }
-        return mainManager.answerCommand(message, bot);
+        return null;
     }
 }

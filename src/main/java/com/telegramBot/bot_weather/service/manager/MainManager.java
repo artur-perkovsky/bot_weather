@@ -32,7 +32,7 @@ public class MainManager {
                                 "Сохранить новый город",
                                 "Показать сохранённые города"),
                         List.of(1, 1, 1),
-                        List.of("weather", "saveNewCity", "savedCities")
+                        List.of("buttonCity", "saveNewCity", "savedCities")
                 ))
                 .build();
     }

@@ -18,7 +18,7 @@ public class StartManager {
     private BotApiMethod<?> echo(Long chatId, Message message, Bot bot) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("Привет \uD83E\uDD1A " + message.getFrom().getFirstName() + ".\n Меня завут Weather bot. " +
+                .text("Привет " + message.getFrom().getFirstName() + " \uD83E\uDD1A.\n Меня завут Weather bot." +
                         "я показываю погоду. \nДля начало введи город")
                 .build();
     }

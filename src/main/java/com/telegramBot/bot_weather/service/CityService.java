@@ -2,12 +2,15 @@ package com.telegramBot.bot_weather.service;
 
 import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.entity.City;
+import com.telegramBot.bot_weather.entity.User;
 import com.telegramBot.bot_weather.repository.CityRepo;
 import com.telegramBot.bot_weather.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +25,9 @@ public class CityService {
     }
 
     public BotApiMethod<?> saveNewCity(Message message, Bot bot) {
-        if (userRepo.findByChatID(message.getChatId()) != null) {
+        var user = userRepo.findByChatID(message.getChatId());
+        if (user != null) {
             if (!cityRepo.existsByCity(this.city)) {
-                var user = userRepo.findByChatID(message.getChatId());
                 Long id = cityRepo.save(
                         City.builder()
                                 .userId(user)
@@ -35,4 +38,17 @@ public class CityService {
         }
         return null;
     }
+
+    public String allCityResponseMessage(Message message) {
+        var user = userRepo.findByChatID(message.getChatId());
+        List<City> cities = cityRepo.findByUserId(user);
+        String messageResponse = "";
+
+        for (City count : cities) {
+            messageResponse = messageResponse + "Город: " + count.getCity() + "\n";
+        }
+        return messageResponse;
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package com.telegramBot.bot_weather.service.forecaste;
+package com.telegramBot.bot_weather.dto.forecaste;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -20,6 +20,4 @@ public class Location {
 
     @JsonProperty("country")
     private String country;
-
-
 }

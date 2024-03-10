@@ -22,21 +22,26 @@ public class UpdateDispatcher {
     private final UnsupportedCommandManage unsupportedCommandManage;
 
     public BotApiMethod<?> distribute(Update update, Bot bot) throws NullPointerException{
-        if (update.hasCallbackQuery()) {
-            return callbackQueryHandler.answer(update.getCallbackQuery(), bot);
-        }
-        if (update.hasMessage()) {
-            var message = update.getMessage();
-            if (message.hasText()) {
-                if (message.getText().charAt(0) == '/') {
-                    log.info("enter command /");
-                    return commandHandler.answer(message, bot);
-                }
-                return messageHandler.answer(message, bot);
-            }
-        }
-        log.warn("Unsupported update type: " + update);
-        return unsupportedCommandManage.answer(update.getMessage(), bot);
 
+        try {
+            if (update.hasCallbackQuery()) {
+                return callbackQueryHandler.answer(update.getCallbackQuery(), bot);
+            }
+            if (update.hasMessage()) {
+                var message = update.getMessage();
+                if (message.hasText()) {
+                    if (message.getText().charAt(0) == '/') {
+                        log.info("enter command /");
+                        return commandHandler.answer(message, bot);
+                    }
+                    return messageHandler.answer(message, bot);
+                }
+            }
+            log.warn("Unsupported update type: " + update);
+            return unsupportedCommandManage.answer(update.getMessage(), bot);
+        }catch (NullPointerException e){
+            log.warn("Update is null " + e);
+            return null;
+        }
     }
 }
