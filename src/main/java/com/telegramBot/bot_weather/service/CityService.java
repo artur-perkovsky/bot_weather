@@ -2,7 +2,6 @@ package com.telegramBot.bot_weather.service;
 
 import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.entity.City;
-import com.telegramBot.bot_weather.entity.User;
 import com.telegramBot.bot_weather.repository.CityRepo;
 import com.telegramBot.bot_weather.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -51,4 +50,20 @@ public class CityService {
     }
 
 
+    public boolean  chekCityDelete(Message message) {
+        City city = cityRepo.findByCity(message.getText());
+        if (city != null){
+            this.city = city.getCity();
+        }
+        return city != null;
+    }
+
+    public String deleteCity(Message message) {
+        if (this.city != null) {
+            City city = cityRepo.findByCity(this.city);
+            cityRepo.delete(city);
+            return city.getCity();
+        }
+        return null;
+    }
 }

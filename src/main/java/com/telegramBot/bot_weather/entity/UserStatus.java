@@ -2,6 +2,7 @@ package com.telegramBot.bot_weather.entity;
 
 
 public enum UserStatus {
-    CITY,
-    MENU
+    CITY_ADD,
+    MENU,
+    CITY_DELETE
 }

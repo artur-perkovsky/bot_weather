@@ -4,7 +4,9 @@ import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.APIService;
+import com.telegramBot.bot_weather.service.CityService;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
+import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
 import com.telegramBot.bot_weather.service.manager.UnsupportedCommandManage;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,10 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class MessageHandler extends AbstractHandler {
 
     private final MainManager mainManager;
+    private final CityManager cityManager;
     private final UnsupportedCommandManage unsupportedCommandManage;
     private final APIService apiService;
+    private final CityService cityService;
     private final UserRepo userRepo;
     private UserStatus userStatus;
 
@@ -32,12 +36,19 @@ public class MessageHandler extends AbstractHandler {
         if (message != null){
             try {
                 switch (user.getUserStatus()) {
-                    case CITY -> {
+                    case CITY_ADD -> {
                         String city = message.getText();
                         return apiService.checkCity(message, city, bot);
                     }
                     case MENU -> {
                         return unsupportedCommandManage.answer(message, bot);
+                    }
+                    case CITY_DELETE -> {
+                        if (cityService.chekCityDelete(message)){
+                            return cityManager.verificationDelete(message);
+                        }else {
+                            return cityManager.cityNotFound(message);
+                        }
                     }
                 }
             } catch (NullPointerException e) {

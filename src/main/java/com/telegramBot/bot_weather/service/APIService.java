@@ -24,8 +24,6 @@ public class APIService {
     private final APIConfig apiConfig;
     private final CityManager cityManager;
     private final CityService cityService;
-    private final CityRepo cityRepo;
-    private final UserRepo userRepo;
 
     @Autowired
     private Forecast forecaste;

@@ -33,14 +33,14 @@ public class CommandHandler extends AbstractHandler {
                 case "/start": {
                     if (userRepo.existsByChatID(chatId)) {
                         var user = userRepo.findByChatID(chatId);
-                        user.setUserStatus(UserStatus.CITY);
+                        user.setUserStatus(UserStatus.CITY_ADD);
                         userRepo.save(user);
                         return startManager.answerCommand(message, bot);
                     } else {
                         userRepo.save(User.builder()
                                 .chatID(message.getChatId())
                                 .firstName(message.getFrom().getFirstName())
-                                .userStatus(UserStatus.CITY)
+                                .userStatus(UserStatus.CITY_ADD)
                                 .build());
                         return startManager.answerCommand(message, bot);
                     }

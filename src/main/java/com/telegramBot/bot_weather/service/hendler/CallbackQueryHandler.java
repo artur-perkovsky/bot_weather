@@ -1,7 +1,6 @@
 package com.telegramBot.bot_weather.service.hendler;
 
 import com.telegramBot.bot_weather.bot.Bot;
-import com.telegramBot.bot_weather.dto.forecaste.Forecast;
 import com.telegramBot.bot_weather.entity.City;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.CityRepo;
@@ -11,6 +10,7 @@ import com.telegramBot.bot_weather.service.CityService;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
 import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
+import com.telegramBot.bot_weather.service.manager.WeatherManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,7 @@ public class CallbackQueryHandler extends AbstractHandler {
 
     private final MainManager mainManager;
     private final CityManager cityManager;
+    private final WeatherManager weatherManager;
     private final CityService cityService;
     private final APIService apiService;
     private final UserRepo userRepo;
@@ -49,8 +50,8 @@ public class CallbackQueryHandler extends AbstractHandler {
                 userRepo.save(user);
                 return mainManager.answerCommand(query.getMessage(), bot);
             }
-            case "saveNewCity": {
-                user.setUserStatus(UserStatus.CITY);
+            case "verificationNewCity": {
+                user.setUserStatus(UserStatus.CITY_ADD);
                 userRepo.save(user);
                 return cityManager.inputCity(query.getMessage());
             }
@@ -60,24 +61,31 @@ public class CallbackQueryHandler extends AbstractHandler {
             case "buttonCity": {
                 List<City> city = cityRepo.findByUserId(user);
                 if (city != null) {
-                    return cityManager.buttonCity(query.getMessage(), city);
+                    return cityManager.buttonListCity(query.getMessage(), city);
                 } else {
                     log.info("Сохранённых городв нету");
                     return null;
                 }
             }
-            case "deleteCity": {
-                user.setUserStatus(UserStatus.CITY);
+            case "verificationDeleteCity": {
+                user.setUserStatus(UserStatus.CITY_DELETE);
                 userRepo.save(user);
-                return null;
+                return cityManager.inputCity(query.getMessage());
+            }
+            case "delete": {
+                user.setUserStatus(UserStatus.MENU);
+                userRepo.save(user);
+                if (cityService.deleteCity(query.getMessage()) != null){
+                    return cityManager.allCity(query.getMessage());
+                }
             }
             default: {
                 List<City> city = cityRepo.findByUserId(user);
                 for (City count : city
                 ) {
-                    if (count.getCity().equals(query.getData())){
-                      return   cityManager.weather(query.getMessage(),
-                                apiService.getWeather(query.getMessage(),count.getCity()));
+                    if (count.getCity().equals(query.getData())) {
+                        return weatherManager.weather(query.getMessage(),
+                                apiService.getWeather(query.getMessage(), count.getCity()));
                     }
                 }
             }

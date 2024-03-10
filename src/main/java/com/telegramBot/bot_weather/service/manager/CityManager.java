@@ -27,8 +27,6 @@ public class CityManager extends AbstractHandler {
 
     private final KeyboardFactory keyboardFactory;
     private final CityService cityService;
-    private final CityRepo cityRepo;
-    private final UserRepo userRepo;
     private Forecast forecast;
 
     @Override
@@ -62,42 +60,19 @@ public class CityManager extends AbstractHandler {
                 .build();
     }
 
-    public BotApiMethod<?> weather(Message message, Forecast forecast) {
-        return SendMessage.builder()
-                .chatId(message.getChatId())
-                .text("Послднее обновление: " + forecast.getCurrent().getLastUpdate() + "\n" +
-                        "Страна: " + forecast.getLocation().getCountry() + "\n" +
-                        "Регион: " + forecast.getLocation().getRegion() + "\n" +
-                        "Город: " + forecast.getLocation().getName() + "\n" +
-                        "Температура: " + forecast.getCurrent().getTemp() + " \u2103" + "\n" +
-                        "Скорость ветра: " + forecast.getCurrent().getWindKph() + " км/ч" + "\n" +
-                        "Состояние: " + forecast.getCurrent().getCondition().getText() + "\n" +
-                        "Влажность: " + forecast.getCurrent().getHumidity() + " %" + "\n" +
-                        "Облачность: " + forecast.getCurrent().getCloud() +  " %" + "\n" +
-                        "Осадки: " + forecast.getCurrent().getPrecip() + " мм"
-                )
-                .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Меню"),
-                        List.of(1),
-                        List.of("menu")
-                ))
-                .build();
-    }
-
     public BotApiMethod<?> allCity(Message message) {
-
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text(cityService.allCityResponseMessage(message))
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
                         List.of("Удалить Город", "Мнею"),
                         List.of(2),
-                        List.of("deleteCity", "menu")
+                        List.of("verificationDeleteCity", "menu")
                 ))
                 .build();
     }
 
-    public BotApiMethod<?> buttonCity(Message message, List<City> cities) {
+    public BotApiMethod<?> buttonListCity(Message message, List<City> cities) {
         List<String> buttonListCity = new ArrayList<>();
         List<Integer> buttonList = new ArrayList<>();
         for (int count = 0; count < cities.size(); count++) {
@@ -106,7 +81,6 @@ public class CityManager extends AbstractHandler {
         }
         buttonListCity.add("menu");
         buttonList.add(1);
-
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text("Выберите город")
@@ -117,6 +91,16 @@ public class CityManager extends AbstractHandler {
                 ))
                 .build();
     }
-
+    public BotApiMethod<?> verificationDelete(Message message) {
+        return SendMessage.builder()
+                .chatId(message.getChatId())
+                .text("Вы уверены")
+                .replyMarkup(keyboardFactory.createInlineKeyboard(
+                        List.of("Удалить", "Отмена"),
+                        List.of(2),
+                        List.of("delete", "menu")
+                ))
+                .build();
+    }
 
 }
