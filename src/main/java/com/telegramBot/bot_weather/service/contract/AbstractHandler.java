@@ -8,5 +8,5 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 @Service
 public abstract class AbstractHandler {
 
-    public abstract BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot);
+    public abstract BotApiMethod<?> answer(BotApiObject botApiObject);
 }

@@ -4,8 +4,6 @@ package com.telegramBot.bot_weather.service.manager;
 import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.dto.forecaste.Forecast;
 import com.telegramBot.bot_weather.entity.City;
-import com.telegramBot.bot_weather.repository.CityRepo;
-import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.CityService;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
 import com.telegramBot.bot_weather.service.factory.KeyboardFactory;
@@ -23,16 +21,11 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CityManager extends AbstractHandler {
+public class CityManager {
 
     private final KeyboardFactory keyboardFactory;
     private final CityService cityService;
     private Forecast forecast;
-
-    @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
-        return null;
-    }
 
     public BotApiMethod<?> cityFound(Message message) {
         return SendMessage.builder()
@@ -91,6 +84,7 @@ public class CityManager extends AbstractHandler {
                 ))
                 .build();
     }
+
     public BotApiMethod<?> verificationDelete(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId())

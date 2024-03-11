@@ -23,7 +23,7 @@ public class WeatherManager extends AbstractHandler {
     private Forecast forecast;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject) {
         return null;
     }
 
@@ -36,6 +36,7 @@ public class WeatherManager extends AbstractHandler {
                         "Регион: " + forecast.getLocation().getRegion() + "\n" +
                         "Город: " + forecast.getLocation().getName() + "\n" +
                         "Температура: " + forecast.getCurrent().getTemp() + " \u2103" + "\n" +
+                        "Направление ветра: " + forecast.getCurrent().getWind() + "\n" +
                         "Скорость ветра: " + forecast.getCurrent().getWindKph() + " км/ч" + "\n" +
                         "Состояние: " + forecast.getCurrent().getCondition().getText() + "\n" +
                         "Влажность: " + forecast.getCurrent().getHumidity() + " %" + "\n" +
@@ -49,5 +50,4 @@ public class WeatherManager extends AbstractHandler {
                 ))
                 .build();
     }
-
 }

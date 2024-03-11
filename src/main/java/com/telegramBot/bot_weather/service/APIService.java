@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.Map;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,8 +27,7 @@ public class APIService {
     private final CityManager cityManager;
     private final CityService cityService;
 
-    @Autowired
-    private Forecast forecaste;
+    private Forecast forecast;
 
     public String apiURL(String city) {
         String url = apiConfig.getApiURL()
@@ -35,7 +36,7 @@ public class APIService {
         return url;
     }
 
-    public BotApiMethod<?> checkCity(Message message, String city, Bot bot) {
+    public BotApiMethod<?> checkCity(Message message, String city) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.getForEntity(

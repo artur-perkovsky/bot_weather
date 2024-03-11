@@ -23,7 +23,7 @@ public class CityService {
         this.city = city;
     }
 
-    public BotApiMethod<?> saveNewCity(Message message, Bot bot) {
+    public BotApiMethod<?> saveNewCity(Message message) {
         var user = userRepo.findByChatID(message.getChatId());
         if (user != null) {
             if (!cityRepo.existsByCity(this.city)) {

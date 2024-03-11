@@ -32,4 +32,7 @@ public class Current {
 
     @JsonProperty("precip_mm")
     private String precip;
+
+    @JsonProperty("wind_dir")
+    private String wind;
 }

@@ -20,11 +20,10 @@ public class CommandHandler extends AbstractHandler {
 
     private final StartManager startManager;
     private final MainManager mainManager;
-    private final CityManager cityManager;
     private final UserRepo userRepo;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject) {
         var message = (Message) botApiObject;
         Long chatId = message.getChatId();
         String command = message.getText();
@@ -35,25 +34,25 @@ public class CommandHandler extends AbstractHandler {
                         var user = userRepo.findByChatID(chatId);
                         user.setUserStatus(UserStatus.CITY_ADD);
                         userRepo.save(user);
-                        return startManager.answerCommand(message, bot);
+                        return startManager.answerCommand(message);
                     } else {
                         userRepo.save(User.builder()
                                 .chatID(message.getChatId())
                                 .firstName(message.getFrom().getFirstName())
                                 .userStatus(UserStatus.CITY_ADD)
                                 .build());
-                        return startManager.answerCommand(message, bot);
+                        return startManager.answerCommand(message);
                     }
                 }
                 case "/menu": {
                     var user = userRepo.findByChatID(chatId);
                     user.setUserStatus(UserStatus.MENU);
                     userRepo.save(user);
-                    return mainManager.answerCommand(message, bot);
+                    return mainManager.answerCommand(message);
                 }
             }
         }catch (NullPointerException e){
-           System.out.printf("Message Null" + e);
+           System.out.printf("Command is Null" + e);
            return null;
        }
        return null;

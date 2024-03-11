@@ -1,9 +1,5 @@
 package com.telegramBot.bot_weather.service.manager;
 
-import com.telegramBot.bot_weather.bot.Bot;
-import com.telegramBot.bot_weather.entity.User;
-import com.telegramBot.bot_weather.entity.UserStatus;
-import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.factory.KeyboardFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,15 +13,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainManager {
     private final KeyboardFactory keyboardFactory;
-    private final UserRepo userRepo;
 
-    public BotApiMethod<?> answerCommand(Message message, Bot bot) {
-        return echo(message.getChatId(), message, bot);
-    }
-
-    private BotApiMethod<?> echo(Long chatId, Message message, Bot bot) {
+    public BotApiMethod<?> answerCommand(Message message) {
         return SendMessage.builder()
-                .chatId(chatId)
+                .chatId(message.getChatId())
                 .text("Меню")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
                         List.of("Показать погоду",

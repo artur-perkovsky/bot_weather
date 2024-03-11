@@ -30,7 +30,7 @@ public class MessageHandler extends AbstractHandler {
     private UserStatus userStatus;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject) {
         var message = (Message) botApiObject;
         var user = userRepo.findByChatID(message.getChatId());
         if (message != null){
@@ -38,10 +38,10 @@ public class MessageHandler extends AbstractHandler {
                 switch (user.getUserStatus()) {
                     case CITY_ADD -> {
                         String city = message.getText();
-                        return apiService.checkCity(message, city, bot);
+                        return apiService.checkCity(message, city);
                     }
                     case MENU -> {
-                        return unsupportedCommandManage.answer(message, bot);
+                        return unsupportedCommandManage.answer(message);
                     }
                     case CITY_DELETE -> {
                         if (cityService.chekCityDelete(message)){
@@ -54,7 +54,7 @@ public class MessageHandler extends AbstractHandler {
             } catch (NullPointerException e) {
                 log.info("exception Status" + e);
             }
-            return mainManager.answerCommand(message, bot);
+            return mainManager.answerCommand(message);
         }
         return null;
     }

@@ -34,21 +34,21 @@ public class CallbackQueryHandler extends AbstractHandler {
     private final CityRepo cityRepo;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject) {
         var query = (CallbackQuery) botApiObject;
         var user = userRepo.findByChatID(query.getMessage().getChatId());
 
         switch (query.getData()) {
             case "save": {
-                cityService.saveNewCity(query.getMessage(), bot);
+                cityService.saveNewCity(query.getMessage());
                 user.setUserStatus(UserStatus.MENU);
                 userRepo.save(user);
-                return mainManager.answerCommand(query.getMessage(), bot);
+                return mainManager.answerCommand(query.getMessage());
             }
             case "menu": {
                 user.setUserStatus(UserStatus.MENU);
                 userRepo.save(user);
-                return mainManager.answerCommand(query.getMessage(), bot);
+                return mainManager.answerCommand(query.getMessage());
             }
             case "verificationNewCity": {
                 user.setUserStatus(UserStatus.CITY_ADD);
