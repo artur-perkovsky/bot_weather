@@ -43,6 +43,11 @@ public class CityManager {
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text("Город не найден, попробуй снова")
+                .replyMarkup(keyboardFactory.createInlineKeyboard(
+                        List.of("Меню"),
+                        List.of(1),
+                        List.of("menu")
+                ))
                 .build();
     }
 

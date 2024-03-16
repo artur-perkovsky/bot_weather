@@ -1,6 +1,5 @@
 package com.telegramBot.bot_weather.service.hendler;
 
-import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.APIService;
@@ -8,7 +7,7 @@ import com.telegramBot.bot_weather.service.CityService;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
 import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
-import com.telegramBot.bot_weather.service.manager.UnsupportedCommandManage;
+import com.telegramBot.bot_weather.service.manager.UnsupportedCommandManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class MessageHandler extends AbstractHandler {
 
     private final MainManager mainManager;
     private final CityManager cityManager;
-    private final UnsupportedCommandManage unsupportedCommandManage;
+    private final UnsupportedCommandManager unsupportedCommandManage;
     private final APIService apiService;
     private final CityService cityService;
     private final UserRepo userRepo;
