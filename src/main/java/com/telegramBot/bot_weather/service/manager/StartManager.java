@@ -13,8 +13,10 @@ public class StartManager {
     public BotApiMethod<?> answerCommand(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Привет " + message.getFrom().getFirstName() + " \uD83E\uDD1A.\n Меня завут Weather bot." +
-                        "я показываю погоду. \nДля начало введи город")
+                .text("Привет " + message.getFrom().getFirstName() + " \uD83E\uDD1A." +
+                        "\n Меня завут Weather bot." +
+                        "я показываю погоду. " +
+                        "\nДля начало введи город")
                 .build();
     }
 }

@@ -34,8 +34,8 @@ public class Bot extends TelegramWebhookBot {
         );
         try {
             execute(new SetMyCommands(commandList, new BotCommandScopeDefault(), null));
-        }catch (TelegramApiException e){
-            log.error("Error settings bot" + e);
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage() + e);
         }
     }
 

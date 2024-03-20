@@ -40,7 +40,7 @@ public class UpdateDispatcher {
             log.warn("Unsupported update type: " + update);
             return unsupportedCommandManage.answer(update.getMessage());
         } catch (NullPointerException e) {
-            log.warn("Update is null " + e);
+            log.warn(e.getMessage() + e);
         }
         return null;
     }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Condition{
+public class Condition {
 
     @JsonProperty("text")
     private String text;
