@@ -29,11 +29,11 @@ public class CommandHandler extends AbstractHandler {
         var message = (Message) botApiObject;
         Long chatId = message.getChatId();
         String command = message.getText();
-        try {
+        if (command != null) {
             switch (command) {
                 case "/start": {
-                    if (userRepo.existsByChatID(chatId)) {
-                        var user = userRepo.findByChatID(chatId);
+                    var user = userRepo.findByChatID(chatId);
+                    if (user != null) {
                         user.setUserStatus(UserStatus.CITY_ADD);
                         userRepo.save(user);
                         return startManager.answerCommand(message);
@@ -50,17 +50,17 @@ public class CommandHandler extends AbstractHandler {
                     var user = userRepo.findByChatID(chatId);
                     user.setUserStatus(UserStatus.MENU);
                     userRepo.save(user);
-                    return mainManager.answerCommand(message);
+                    return mainManager.answer(message);
                 }
                 case "/help": {
                     return helpManager.answerCommand(message);
                 }
                 case "/city": {
-                    return cityManager.allCity(message);
+                    return cityManager.answerCommand(message);
                 }
             }
-        } catch (NullPointerException e) {
-            System.out.printf("Command is Null" + e);
+        } else {
+            System.out.printf("Command is Null");
             return null;
         }
         return null;

@@ -1,5 +1,6 @@
 package com.telegramBot.bot_weather.service.manager;
 
+import com.telegramBot.bot_weather.entity.DataQuery;
 import com.telegramBot.bot_weather.service.factory.KeyboardFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainManager {
     private final KeyboardFactory keyboardFactory;
+    private DataQuery dataQuery;
 
-    public BotApiMethod<?> answerCommand(Message message) {
+    public BotApiMethod<?> answer(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text("Меню")
@@ -23,7 +25,9 @@ public class MainManager {
                                 "Сохранить новый город",
                                 "Показать сохранённые города"),
                         List.of(1, 1, 1),
-                        List.of("buttonCity", "verificationNewCity", "savedCities")
+                        List.of(dataQuery.city_list.name(),
+                                dataQuery.city_verification_add.name(),
+                                dataQuery.city_all.name())
                 ))
                 .build();
     }
