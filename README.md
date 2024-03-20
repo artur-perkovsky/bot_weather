@@ -68,65 +68,7 @@ api.token=${API_WEATHER_TOKEN}
 "bot.path"  - адрес сконфигурированный ngrock  .
 
 #### Зависимости
-```xml
-<dependency>  
-    <groupId>org.springframework.boot</groupId>  
-    <artifactId>spring-boot-starter-web</artifactId>  
-</dependency>  
-  
-<dependency>  
-    <groupId>org.projectlombok</groupId>  
-    <artifactId>lombok</artifactId>  
-    <optional>true</optional>  
-</dependency>  
-  
-<dependency>  
-    <groupId>org.springframework.boot</groupId>  
-    <artifactId>spring-boot-starter-test</artifactId> 
-    <scope>test</scope>  
-</dependency>  
-  
-<dependency>  
-    <groupId>org.telegram</groupId>  
-    <artifactId>telegrambots</artifactId>  
-    <version>6.7.0</version>  
-</dependency>  
-<dependency>  
-    <groupId>org.projectlombok</groupId>  
-    <artifactId>lombok-maven-plugin</artifactId>  
-    <version>1.18.20.0</version>  
-    <scope>provided</scope>  
-</dependency>  
-  
-<dependency>  
-    <groupId>ch.qos.logback</groupId>  
-    <artifactId>logback-classic</artifactId>  
-</dependency>  
-  
-<dependency>  
-    <groupId>org.springframework.boot</groupId>  
-    <artifactId>spring-boot-starter-data-jpa</artifactId>  
-</dependency>  
-<dependency>  
-    <groupId>org.postgresql</groupId>  
-    <artifactId>postgresql</artifactId>  
-    <version>42.2.5</version>  
-</dependency>  
-  
-<dependency>  
-    <groupId>javax.xml.bind</groupId>  
-    <artifactId>jaxb-api</artifactId>  
-    <version>2.3.0</version>  
-</dependency>  
-  
-<dependency>  
-    <groupId>org.jetbrains</groupId>  
-    <artifactId>annotations</artifactId>  
-    <version>RELEASE</version>  
-    <scope>compile</scope>  
-</dependency>
-```
-
+Для управления зависимостями используется mave
 ***
 ## Автор
 
