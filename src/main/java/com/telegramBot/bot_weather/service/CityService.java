@@ -43,8 +43,8 @@ public class CityService {
         List<City> cities = cityRepo.findByUserId(user);
         String messageResponse = "";
 
-        for (City count : cities) {
-            messageResponse = messageResponse + "Город: " + count.getCity() + "\n";
+        for (City cityCount : cities) {
+            messageResponse = messageResponse + "Город: " + cityCount.getCity() + "\n";
         }
         return messageResponse;
     }
