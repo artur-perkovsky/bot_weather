@@ -1,5 +1,6 @@
 package com.telegramBot.bot_weather.service.hendler;
 
+import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
 import com.telegramBot.bot_weather.service.manager.CityManager;
@@ -23,7 +24,7 @@ public class MessageHandler extends AbstractHandler {
     private final UserRepo userRepo;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot ) {
         var message = (Message) botApiObject;
         var user = userRepo.findByChatID(message.getChatId());
         String[] wordsUserStatus = user.getUserStatus().name().split("_");

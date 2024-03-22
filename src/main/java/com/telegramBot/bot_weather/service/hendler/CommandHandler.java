@@ -1,5 +1,6 @@
 package com.telegramBot.bot_weather.service.hendler;
 
+import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.entity.User;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.UserRepo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class CommandHandler extends AbstractHandler {
     private final UserRepo userRepo;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) throws TelegramApiException {
         var message = (Message) botApiObject;
         Long chatId = message.getChatId();
         String command = message.getText();
@@ -50,7 +52,7 @@ public class CommandHandler extends AbstractHandler {
                     var user = userRepo.findByChatID(chatId);
                     user.setUserStatus(UserStatus.MENU);
                     userRepo.save(user);
-                    return mainManager.answer(message);
+                    return mainManager.answer(message, bot);
                 }
                 case "/help": {
                     return helpManager.answerCommand(message);

@@ -1,6 +1,7 @@
 package com.telegramBot.bot_weather.service.manager;
 
 
+import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.dto.forecaste.Forecast;
 import com.telegramBot.bot_weather.entity.City;
 import com.telegramBot.bot_weather.entity.DataQuery;
@@ -18,8 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +44,8 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
 
     @Override
     public BotApiMethod<?> answerCommand(Message message) {
-        switch (message.getText()){
-            case "/city" ->{
+        switch (message.getText()) {
+            case "/city" -> {
                 return allCity(message);
             }
         }
@@ -72,7 +75,13 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
     }
 
     @Override
-    public BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery) {
+    public BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot) throws TelegramApiException {
+        bot.execute(
+                DeleteMessage.builder()
+                        .chatId(query.getMessage().getChatId())
+                        .messageId(query.getMessage().getMessageId())
+                        .build()
+        );
         var user = userRepo.findByChatID(query.getMessage().getChatId());
 
         switch (wordsDataQuery.length) {
@@ -92,7 +101,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
                         cityService.saveNewCity(query.getMessage());
                         user.setUserStatus(UserStatus.MENU);
                         userRepo.save(user);
-                        return mainManager.answer(query.getMessage());
+                        return mainManager.answer(query.getMessage(), bot);
                     }
                     case "delete" -> {
                         user.setUserStatus(UserStatus.MENU);

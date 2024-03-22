@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Slf4j
 @Service
@@ -21,20 +22,20 @@ public class UpdateDispatcher {
     private final CommandHandler commandHandler;
     private final UnsupportedCommandManager unsupportedCommandManage;
 
-    public BotApiMethod<?> distribute(Update update, Bot bot) throws NullPointerException {
+    public BotApiMethod<?> distribute(Update update, Bot bot) throws NullPointerException, TelegramApiException {
 
         try {
             if (update.hasCallbackQuery()) {
-                return callbackQueryHandler.answer(update.getCallbackQuery());
+                return callbackQueryHandler.answer(update.getCallbackQuery(), bot);
             }
             if (update.hasMessage()) {
                 var message = update.getMessage();
                 if (message.hasText()) {
                     if (message.getText().charAt(0) == '/') {
                         log.info("enter command /");
-                        return commandHandler.answer(message);
+                        return commandHandler.answer(message, bot);
                     }
-                    return messageHandler.answer(message);
+                    return messageHandler.answer(message, bot);
                 }
             }
             log.warn("Unsupported update type: " + update);
