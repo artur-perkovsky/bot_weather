@@ -7,5 +7,5 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public interface QueryListener {
 
-    BotApiMethod<?> answerQuery(CallbackQuery query, String[] words, Bot bot) throws TelegramApiException;
+    BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot) throws TelegramApiException;
 }

@@ -37,6 +37,9 @@ public class MessageHandler extends AbstractHandler {
                 case "MENU" -> {
                     return unsupportedCommandManage.answer(message);
                 }
+                case "WEATHER" -> {
+                    return unsupportedCommandManage.answer(message);
+                }
             }
         }
         return null;

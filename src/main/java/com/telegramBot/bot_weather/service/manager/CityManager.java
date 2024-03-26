@@ -2,9 +2,9 @@ package com.telegramBot.bot_weather.service.manager;
 
 
 import com.telegramBot.bot_weather.bot.Bot;
-import com.telegramBot.bot_weather.dto.forecaste.Forecast;
+import com.telegramBot.bot_weather.dto.DataQuery;
+import com.telegramBot.bot_weather.dto.forecaste.Weather;
 import com.telegramBot.bot_weather.entity.City;
-import com.telegramBot.bot_weather.entity.DataQuery;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.CityRepo;
 import com.telegramBot.bot_weather.repository.UserRepo;
@@ -40,7 +40,8 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
     private final UserRepo userRepo;
     private final CityService cityService;
     private DataQuery dataQuery;
-    private Forecast forecast;
+    private Weather weather;
+    private City city;
 
     @Override
     public BotApiMethod<?> answerCommand(Message message) {
@@ -75,7 +76,8 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
     }
 
     @Override
-    public BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot) throws TelegramApiException {
+    public BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot)
+            throws TelegramApiException {
         bot.execute(
                 DeleteMessage.builder()
                         .chatId(query.getMessage().getChatId())
@@ -87,11 +89,12 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
         switch (wordsDataQuery.length) {
             case 1 -> {
                 List<City> city = cityRepo.findByUserId(user);
-                for (City count : city
+                for (City cityCount : city
                 ) {
-                    if (count.getCity().equals(query.getData())) {
-                        return weatherManager.weather(query.getMessage(),
-                                apiService.getWeather(query.getMessage(), count.getCity()));
+                    if (cityCount.getCity().equals(query.getData())) {
+                        return weatherManager.weatherMenu(query.getMessage(), cityCount);
+                        /*return weatherManager.currentWeather(query.getMessage(),
+                                apiService.getCurrentWeather(query.getMessage(), cityCount.getCity()));*/
                     }
                 }
             }

@@ -6,6 +6,7 @@ import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
 import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
+import com.telegramBot.bot_weather.service.manager.WeatherManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class CallbackQueryHandler extends AbstractHandler {
 
     private final MainManager mainManager;
     private final CityManager cityManager;
+    private final WeatherManager weatherManager;
     private final UserRepo userRepo;
 
     @Override
@@ -34,6 +36,11 @@ public class CallbackQueryHandler extends AbstractHandler {
                 user.setUserStatus(UserStatus.MENU);
                 userRepo.save(user);
                 return mainManager.answer(query.getMessage(), bot);
+            }
+            case "weather" -> {
+               /* user.setUserStatus(UserStatus.WEATHER);
+                userRepo.save(user);*/
+                return weatherManager.answerQuery(query, wordsDataQuery, bot);
             }
             default -> {
                 return cityManager.answerQuery(query, wordsDataQuery, bot);

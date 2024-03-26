@@ -6,14 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @Getter
 @Setter
 @NoArgsConstructor
-public class Forecast {
+public class ForecastDay {
 
-    @JsonProperty("forecastday")
-    private List<ForecastDay> forecastDay;
+    @JsonProperty("date")
+    private String data;
+
+    @JsonProperty("date_epoch")
+    private Integer dateEpoch;
+
+    @JsonProperty("day")
+    private Day day;
 }

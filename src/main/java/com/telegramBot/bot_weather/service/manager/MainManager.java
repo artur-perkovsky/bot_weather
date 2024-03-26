@@ -1,7 +1,7 @@
 package com.telegramBot.bot_weather.service.manager;
 
 import com.telegramBot.bot_weather.bot.Bot;
-import com.telegramBot.bot_weather.entity.DataQuery;
+import com.telegramBot.bot_weather.dto.DataQuery;
 import com.telegramBot.bot_weather.service.factory.KeyboardFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
