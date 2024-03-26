@@ -13,4 +13,6 @@ public interface CityRepo extends JpaRepository<City, Long> {
     List<City> findByUserId(User userId);
 
     boolean existsByCity(String city);
+
+    City findByCity(String city);
 }

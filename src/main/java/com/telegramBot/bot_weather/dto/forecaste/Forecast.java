@@ -1,4 +1,4 @@
-package com.telegramBot.bot_weather.service.forecaste;
+package com.telegramBot.bot_weather.dto.forecaste;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -6,12 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Getter
 @Setter
 @NoArgsConstructor
-public class Current {
+public class Forecast {
 
-    @JsonProperty("temp_c")
-    private String temp;
+    @JsonProperty("forecastday")
+    private List<ForecastDay> forecastDay;
 }
