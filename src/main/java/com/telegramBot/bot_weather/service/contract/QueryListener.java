@@ -5,7 +5,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.FileNotFoundException;
+
 public interface QueryListener {
 
-    BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot) throws TelegramApiException;
+    BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot) throws TelegramApiException, FileNotFoundException;
 }

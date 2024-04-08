@@ -15,6 +15,8 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.FileNotFoundException;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class CallbackQueryHandler extends AbstractHandler {
     private final UserRepo userRepo;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) throws TelegramApiException {
+    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) throws TelegramApiException{
         var query = (CallbackQuery) botApiObject;
         var user = userRepo.findByChatID(query.getMessage().getChatId());
         String[] wordsDataQuery = query.getData().split("_");

@@ -22,6 +22,12 @@ public class City {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "unicode")
+    private String uniCodeCity;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userId;

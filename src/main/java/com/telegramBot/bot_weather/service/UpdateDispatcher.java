@@ -21,8 +21,9 @@ public class UpdateDispatcher {
     private final CallbackQueryHandler callbackQueryHandler;
     private final CommandHandler commandHandler;
     private final UnsupportedCommandManager unsupportedCommandManage;
+    private final FlagCountryService flagCountryService;
 
-    public BotApiMethod<?> distribute(Update update, Bot bot) throws NullPointerException, TelegramApiException {
+    public BotApiMethod<?> distribute(Update update, Bot bot) throws NullPointerException, TelegramApiException{
 
         try {
             if (update.hasCallbackQuery()) {

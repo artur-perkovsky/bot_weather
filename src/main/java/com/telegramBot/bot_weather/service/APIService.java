@@ -19,7 +19,7 @@ public class APIService {
     private final CityService cityService;
     private Weather weather;
 
-    public boolean checkCity(String city) {
+    public Weather checkCity(String city) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.getForEntity(
@@ -27,13 +27,13 @@ public class APIService {
             if (response.getStatusCode().value() == 200) {
                 log.info(city + " Город найден");
                 cityService.city(city);
-                return true;
+                return getCurrentWeather(city);
             }
         } catch (HttpClientErrorException e) {
             log.info(e.getMessage() + e);
-            return false;
+            return null;
         }
-        return false;
+        return null;
     }
     public String currentWeatherURL(String city) {
         String url = apiConfig.getApiCurrentWeatherURL()
@@ -42,7 +42,7 @@ public class APIService {
         return url;
     }
 
-    public Weather getCurrentWeather(Message message, String city) {
+    public Weather getCurrentWeather(String city) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             try {

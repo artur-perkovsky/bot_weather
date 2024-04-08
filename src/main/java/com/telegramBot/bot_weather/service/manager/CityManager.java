@@ -55,11 +55,12 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
 
     @Override
     public BotApiMethod<?> answerMessage(Message message, String[] wordsUserStatus) {
-
         switch (wordsUserStatus[1]) {
             case "ADD" -> {
-                if (apiService.checkCity(message.getText())) {
-                    return cityFound(message);
+                weather = apiService.checkCity(message.getText());
+                this.weather = weather;
+                if (weather != null) {
+                    return cityFound(message, weather.getLocation().getCountry());
                 } else {
                     return cityNotFound(message);
                 }
@@ -78,13 +79,18 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
     @Override
     public BotApiMethod<?> answerQuery(CallbackQuery query, String[] wordsDataQuery, Bot bot)
             throws TelegramApiException {
-        bot.execute(
-                DeleteMessage.builder()
-                        .chatId(query.getMessage().getChatId())
-                        .messageId(query.getMessage().getMessageId())
-                        .build()
-        );
         var user = userRepo.findByChatID(query.getMessage().getChatId());
+
+        if (user.getUserStatus().name() != UserStatus.CITY_ADD.name()) {
+            bot.execute(
+                    DeleteMessage.builder()
+                            .chatId(query.getMessage().getChatId())
+                            .messageId(query.getMessage().getMessageId())
+                            .build()
+            );
+        }else {
+
+        }
 
         switch (wordsDataQuery.length) {
             case 1 -> {
@@ -101,7 +107,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
             case 2 -> {
                 switch (wordsDataQuery[1]) {
                     case "save" -> {
-                        cityService.saveNewCity(query.getMessage());
+                        cityService.saveNewCity(query.getMessage(), this.weather);
                         user.setUserStatus(UserStatus.MENU);
                         userRepo.save(user);
                         return mainManager.answer(query.getMessage(), bot);
@@ -150,24 +156,25 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
         return null;
     }
 
-    public BotApiMethod<?> cityFound(Message message) {
+    public BotApiMethod<?> cityFound(Message message, String country) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Сохранить город", "Меню"),
+                        List.of("Сохранить город ❓", "Меню \uD83D\uDD79"),
                         List.of(2),
                         List.of(DataQuery.city_save.name(), DataQuery.menu.name())
                 ))
-                .text("Город '" + message.getText() + "' Найден")
+                .text("Страна: " + country + "\n" +
+                        "Город: " + message.getText() + "\n Найден")
                 .build();
     }
 
     public BotApiMethod<?> cityNotFound(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Город не найден, попробуй снова")
+                .text("Город не найден, попробуй снова \uD83D\uDD04")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Меню"),
+                        List.of("Меню \uD83D\uDD79"),
                         List.of(1),
                         List.of(DataQuery.menu.name())
                 ))
@@ -177,7 +184,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
     public BotApiMethod<?> inputCity(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Введите город")
+                .text("Введите город \uD83C\uDF0E")
                 .build();
     }
 
@@ -186,7 +193,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
                 .chatId(message.getChatId())
                 .text(cityService.allCityResponseMessage(message))
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Удалить Город", "Меню"),
+                        List.of("Удалить Город ❓", "Меню \uD83D\uDD79"),
                         List.of(2),
                         List.of(DataQuery.city_verification_delete.name(), DataQuery.menu.name())
                 ))
@@ -195,20 +202,23 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
 
     public BotApiMethod<?> buttonListCity(Message message, List<City> cities) {
         List<String> buttonListCity = new ArrayList<>();
+        List<String> buttonListCityData = new ArrayList<>();
         List<Integer> buttonList = new ArrayList<>();
         for (int count = 0; count < cities.size(); count++) {
-            buttonListCity.add(cities.get(count).getCity());
+            buttonListCity.add(cities.get(count).getCity() + " " + cities.get(count).getUniCodeCity());
+            buttonListCityData.add(cities.get(count).getCity());
             buttonList.add(1);
         }
-        buttonListCity.add("menu");
+        buttonListCity.add("Меню \uD83D\uDD79");
+        buttonListCityData.add("menu");
         buttonList.add(1);
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Выберите город")
+                .text("Выберите город \uD83C\uDF0E")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
                         buttonListCity,
                         buttonList,
-                        buttonListCity
+                        buttonListCityData
                 ))
                 .build();
     }
@@ -216,7 +226,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
     public BotApiMethod<?> verificationDelete(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Вы уверены")
+                .text("Вы уверены ❓")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
                         List.of("Удалить", "Отмена"),
                         List.of(2),

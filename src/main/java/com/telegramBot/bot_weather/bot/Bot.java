@@ -1,6 +1,7 @@
 package com.telegramBot.bot_weather.bot;
 
 import com.telegramBot.bot_weather.config.TelegramConfig;
+import com.telegramBot.bot_weather.service.FlagCountryService;
 import com.telegramBot.bot_weather.service.UpdateDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class Bot extends TelegramWebhookBot {
 
     private final TelegramConfig telegramConfig;
     private final UpdateDispatcher updateDispatcher;
+    private FlagCountryService flagCountryService;
 
     public Bot(TelegramConfig telegramConfig, UpdateDispatcher updateDispatcher) throws TelegramApiException {
         super(telegramConfig.getToken());
@@ -41,12 +43,15 @@ public class Bot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+
         try {
             return updateDispatcher.distribute(update, this);
         } catch (TelegramApiException e) {
             e.printStackTrace();
             return null;
         }
+
+
     }
 
     @Override

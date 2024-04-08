@@ -47,7 +47,7 @@ public class WeatherManager implements QueryListener {
         switch (wordsDataQuery[1]) {
             case "current" -> {
                 return currentWeather(query.getMessage(),
-                        apiService.getCurrentWeather(query.getMessage(), this.city.getCity()));
+                        apiService.getCurrentWeather(this.city.getCity()), bot);
             }
             case "today" -> {
                 return todayWeather(query.getMessage(), apiService.getTodayWeather(this.city.getCity()));
@@ -63,11 +63,11 @@ public class WeatherManager implements QueryListener {
         this.city = city;
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Погода")
+                .text("Погода \uD83C\uDF1E")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Текущая погода",
-                                "На сегодня",
-                                "Прогноз на 3 дня"),
+                        List.of("\uD83D\uDDD3 Текущая погода",
+                                "\uD83D\uDCC5 На сегодня",
+                                "\uD83D\uDCC5 Прогноз на 3 дня"),
                         List.of(1, 1, 1),
                         List.of(DataQuery.weather_current.name(),
                                 DataQuery.weather_today.name(),
@@ -76,7 +76,7 @@ public class WeatherManager implements QueryListener {
                 .build();
     }
 
-    public BotApiMethod<?> currentWeather(Message message, Weather weather) {
+    public BotApiMethod<?> currentWeather(Message message, Weather weather, Bot bot) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text("Последнее обновление: " + weather.getCurrent().getLastUpdate() + "\n" +
@@ -93,7 +93,7 @@ public class WeatherManager implements QueryListener {
                         "Осадки: " + weather.getCurrent().getPrecip() + " мм"
                 )
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Меню"),
+                        List.of("Меню \uD83D\uDD79"),
                         List.of(1),
                         List.of(DataQuery.menu.name())
                 ))
@@ -103,18 +103,15 @@ public class WeatherManager implements QueryListener {
     public BotApiMethod<?> todayWeather(Message message, Weather weather) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Погода на сегодня:" + "\n" +
-                        "Последнее обновление: " + weather.getForecast().getForecastDay().get(0).getData() + "\n" +
+                .text("Погода на : " + weather.getForecast().getForecastDay().get(0).getData() + "\n" +
                         "Температура днём: " + weather.getForecast().getForecastDay().get(0).getDay().getMaxTemp() + "\n" +
                         "Температура ночью: " + weather.getForecast().getForecastDay().get(0).getDay().getMinTemp() + "\n" +
                         "Состояние: " + weather.getForecast().getForecastDay().get(0).getDay().getCondition().getText() + "\n" +
                         "Поры ветра: " + weather.getForecast().getForecastDay().get(0).getDay().getMaxwind() + " км.ч \n" +
-                        "Осадки: " + weather.getForecast().getForecastDay().get(0).getDay().getTotalprecip() + " мм \n" +
-                        "   Дождь: " + weather.getForecast().getForecastDay().get(0).getDay().getDailyWillRain() + "\n" +
-                        "   Снег: " + weather.getForecast().getForecastDay().get(0).getDay().getDailyWillSnow() + "\n"
+                        "Осадки: " + weather.getForecast().getForecastDay().get(0).getDay().getTotalprecip() + " мм \n"
                 )
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Меню"),
+                        List.of("Меню \uD83D\uDD79"),
                         List.of(1),
                         List.of(DataQuery.menu.name())
                 ))
@@ -123,23 +120,20 @@ public class WeatherManager implements QueryListener {
 
     public BotApiMethod<?> forecastWeather(Message message, Weather weather) {
         String textMessage = " ";
-        for(int day = 0; day <= 2; day ++){
-            textMessage += "Погода на сегодня:" + "\n" +
-                    "Последнее обновление: " + weather.getForecast().getForecastDay().get(day).getData() + "\n" +
+        for (int day = 0; day <= 2; day++) {
+            textMessage += "Погода на : " + weather.getForecast().getForecastDay().get(day).getData() + "\n" +
                     "Температура днём: " + weather.getForecast().getForecastDay().get(day).getDay().getMaxTemp() + "\n" +
                     "Температура ночью: " + weather.getForecast().getForecastDay().get(day).getDay().getMinTemp() + "\n" +
                     "Состояние: " + weather.getForecast().getForecastDay().get(day).getDay().getCondition().getText() + "\n" +
-                    "Поры ветра: " + weather.getForecast().getForecastDay().get(day).getDay().getMaxwind() + " км.ч \n" +
-                    "Осадки: " + weather.getForecast().getForecastDay().get(day).getDay().getTotalprecip() + " мм \n" +
-                    "   Дождь: " + weather.getForecast().getForecastDay().get(day).getDay().getDailyWillRain() + "\n" +
-                    "   Снег: " + weather.getForecast().getForecastDay().get(day).getDay().getDailyWillSnow() + "\n"
+                    "Порывы ветра: " + weather.getForecast().getForecastDay().get(day).getDay().getMaxwind() + " км.ч \n" +
+                    "Осадки: " + weather.getForecast().getForecastDay().get(day).getDay().getTotalprecip() + " мм \n"
                     + "\n \n";
         }
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text(textMessage)
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Меню"),
+                        List.of("Меню \uD83D\uDD79"),
                         List.of(1),
                         List.of(DataQuery.menu.name())
                 ))

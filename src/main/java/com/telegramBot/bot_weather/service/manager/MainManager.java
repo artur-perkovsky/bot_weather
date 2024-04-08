@@ -20,19 +20,19 @@ public class MainManager {
     private DataQuery dataQuery;
 
     public BotApiMethod<?> answer(Message message, Bot bot) throws TelegramApiException {
-        bot.execute(
+        /*bot.execute(
                 DeleteMessage.builder()
                         .chatId(message.getChatId())
                         .messageId(message.getMessageId())
                         .build()
-        );
+        );*/
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text("Меню")
+                .text("Меню \uD83D\uDD79")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Показать погоду",
-                                "Сохранить новый город",
-                                "Показать сохранённые города"),
+                        List.of("☀ Показать погоду",
+                                "➕ Сохранить новый город",
+                                "\uD83C\uDFD9 Показать сохранённые города"),
                         List.of(1, 1, 1),
                         List.of(dataQuery.city_list.name(),
                                 dataQuery.city_verification_add.name(),

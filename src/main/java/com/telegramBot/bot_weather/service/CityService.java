@@ -1,6 +1,6 @@
 package com.telegramBot.bot_weather.service;
 
-import com.telegramBot.bot_weather.bot.Bot;
+import com.telegramBot.bot_weather.dto.forecaste.Weather;
 import com.telegramBot.bot_weather.entity.City;
 import com.telegramBot.bot_weather.repository.CityRepo;
 import com.telegramBot.bot_weather.repository.UserRepo;
@@ -17,13 +17,17 @@ public class CityService {
 
     private final UserRepo userRepo;
     private final CityRepo cityRepo;
+    private final FlagCountryService flagCountryService;
     private String city;
+    private Weather weather;
 
     public void city(String city) {
         this.city = city;
     }
 
-    public BotApiMethod<?> saveNewCity(Message message) {
+    public BotApiMethod<?> saveNewCity(Message message, Weather weather) {
+        String country = weather.getLocation().getCountry();
+        String flagUnicode = flagCountryService.getFlagUnicode(country);
         var user = userRepo.findByChatID(message.getChatId());
         if (user != null) {
             if (!cityRepo.existsByCity(this.city)) {
@@ -31,6 +35,8 @@ public class CityService {
                         City.builder()
                                 .userId(user)
                                 .city(city)
+                                .country(country)
+                                .uniCodeCity(flagUnicode)
                                 .build()
                 ).getId();
             }
@@ -44,15 +50,16 @@ public class CityService {
         String messageResponse = "";
 
         for (City cityCount : cities) {
-            messageResponse = messageResponse + "Город: " + cityCount.getCity() + "\n";
+            messageResponse = messageResponse + "- " + cityCount.getCountry() + cityCount.getUniCodeCity() +
+                            " город: " + cityCount.getCity() + "\n" +
+                            "______________________________________ \n";
         }
         return messageResponse;
     }
 
-
-    public boolean  chekCityDelete(Message message) {
+    public boolean chekCityDelete(Message message) {
         City city = cityRepo.findByCity(message.getText());
-        if (city != null){
+        if (city != null) {
             this.city = city.getCity();
         }
         return city != null;
