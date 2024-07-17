@@ -1,4 +1,4 @@
-package com.telegramBot.bot_weather.dto.json;
+package com.telegramBot.bot_weather.dto.country;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Country {
+public class Header {
 
     @JsonProperty("name")
     private String name;
@@ -26,7 +26,7 @@ public class Country {
     private String alpha3;
 
     @JsonProperty("iso")
-    private int iso;
+    private String iso;
 
     @JsonProperty("location")
     private String location;

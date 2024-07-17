@@ -50,15 +50,15 @@ public class CityService {
         String messageResponse = "";
 
         for (City cityCount : cities) {
-            messageResponse = messageResponse + "- " + cityCount.getCountry() + cityCount.getUniCodeCity() +
+            messageResponse = messageResponse + "\uD83D\uDD3A    " + cityCount.getCountry() + cityCount.getUniCodeCity() +
                             " город: " + cityCount.getCity() + "\n" +
-                            "______________________________________ \n";
+                            "________________________ \n";
         }
         return messageResponse;
     }
 
-    public boolean chekCityDelete(Message message) {
-        City city = cityRepo.findByCity(message.getText());
+    public boolean chekCityDelete(String cityText) {
+        City city = cityRepo.findByCity(cityText);
         if (city != null) {
             this.city = city.getCity();
         }

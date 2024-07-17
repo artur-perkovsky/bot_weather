@@ -32,12 +32,17 @@ public class User {
     @JoinColumn(name = "city_id")
     private Set<City> cities;
 
-    public User(Long id, String firstName, Long chatID, UserStatus userStatus, Set<City> cities) {
+    @OneToMany
+    @JoinColumn(name = "nitification_id")
+    private Set<Notification> notifications;
+
+    public User(Long id, String firstName, Long chatID, UserStatus userStatus, Set<City> cities, Set<Notification> notifications) {
         this.Id = id;
         this.firstName = firstName;
         this.chatID = chatID;
         this.cities = cities;
         this.userStatus = userStatus;
+        this.notifications = notifications;
     }
 
     public User() {

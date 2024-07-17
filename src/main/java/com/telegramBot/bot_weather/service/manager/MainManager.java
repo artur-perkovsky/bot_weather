@@ -30,13 +30,13 @@ public class MainManager {
                 .chatId(message.getChatId())
                 .text("Меню \uD83D\uDD79")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("☀ Показать погоду",
-                                "➕ Сохранить новый город",
-                                "\uD83C\uDFD9 Показать сохранённые города"),
+                        List.of("☀ Погода",
+                                "\uD83C\uDFD8 Города",
+                                "\uD83D\uDD14 Уведомление"),
                         List.of(1, 1, 1),
                         List.of(dataQuery.city_list.name(),
-                                dataQuery.city_verification_add.name(),
-                                dataQuery.city_all.name())
+                                dataQuery.city_all.name(),
+                                dataQuery.notification.name())
                 ))
                 .build();
     }

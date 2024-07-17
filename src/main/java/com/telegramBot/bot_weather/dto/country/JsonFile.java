@@ -1,4 +1,4 @@
-package com.telegramBot.bot_weather.dto.json;
+package com.telegramBot.bot_weather.dto.country;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

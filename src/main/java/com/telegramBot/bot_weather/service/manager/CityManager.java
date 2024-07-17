@@ -5,6 +5,7 @@ import com.telegramBot.bot_weather.bot.Bot;
 import com.telegramBot.bot_weather.dto.DataQuery;
 import com.telegramBot.bot_weather.dto.forecaste.Weather;
 import com.telegramBot.bot_weather.entity.City;
+import com.telegramBot.bot_weather.entity.User;
 import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.CityRepo;
 import com.telegramBot.bot_weather.repository.UserRepo;
@@ -55,6 +56,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
 
     @Override
     public BotApiMethod<?> answerMessage(Message message, String[] wordsUserStatus) {
+
         switch (wordsUserStatus[1]) {
             case "ADD" -> {
                 weather = apiService.checkCity(message.getText());
@@ -66,11 +68,11 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
                 }
             }
             case "DELETE" -> {
-                if (cityService.chekCityDelete(message)) {
+             /*   if (cityService.chekCityDelete(message)) {
                     return verificationDelete(message);
                 } else {
                     return cityNotFound(message);
-                }
+                }*/
             }
         }
         return null;
@@ -88,7 +90,7 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
                             .messageId(query.getMessage().getMessageId())
                             .build()
             );
-        }else {
+        } else {
 
         }
 
@@ -145,8 +147,16 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
                             case "delete" -> {
                                 user.setUserStatus(UserStatus.CITY_DELETE);
                                 userRepo.save(user);
-                                return inputCity(query.getMessage());
+                                /*return inputCity(query.getMessage());*/
+                                return cityDelete(query, user);
                             }
+                        }
+                    }
+                    case "delete" -> {
+                        if (cityService.chekCityDelete(wordsDataQuery[2])) {
+                            return verificationDelete(query.getMessage());
+                        } else {
+                            return cityNotFound(query.getMessage());
                         }
                     }
                 }
@@ -193,30 +203,55 @@ public class CityManager implements QueryListener, CommandListener, MessageListe
                 .chatId(message.getChatId())
                 .text(cityService.allCityResponseMessage(message))
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Удалить Город ❓", "Меню \uD83D\uDD79"),
-                        List.of(2),
-                        List.of(DataQuery.city_verification_delete.name(), DataQuery.menu.name())
+                        List.of("Удалить Город \uD83D\uDDD1", "Добавить Город \uD83C\uDD95",
+                                "Меню \uD83D\uDD79"),
+                        List.of(2, 1),
+                        List.of(DataQuery.city_verification_delete.name(), DataQuery.city_verification_add.name(),
+                                DataQuery.menu.name())
                 ))
                 .build();
     }
 
+    public BotApiMethod<?> cityDelete(CallbackQuery query, User user) {
+        List<City> cities = cityRepo.findByUserId(user);
+
+        List<String> cityButtonList = new ArrayList<>();
+        List<String> dataButtonList = new ArrayList<>();
+        List<Integer> configButtonList = new ArrayList<>();
+        for (int buttonCount = 0; buttonCount < cities.size(); buttonCount++) {
+            cityButtonList.add(cities.get(buttonCount).getCity());
+            dataButtonList.add("city_delete_" + cities.get(buttonCount).getCity());
+            configButtonList.add(1);
+        }
+        return SendMessage.builder()
+                .chatId(query.getMessage().getChatId())
+                .text("Выбирите город")
+                .replyMarkup(keyboardFactory.createInlineKeyboard(
+                        cityButtonList,
+                        configButtonList,
+                        dataButtonList
+                ))
+                .build();
+
+    }
+
     public BotApiMethod<?> buttonListCity(Message message, List<City> cities) {
-        List<String> buttonListCity = new ArrayList<>();
+        List<String> buttonListCityString = new ArrayList<>();
         List<String> buttonListCityData = new ArrayList<>();
         List<Integer> buttonList = new ArrayList<>();
         for (int count = 0; count < cities.size(); count++) {
-            buttonListCity.add(cities.get(count).getCity() + " " + cities.get(count).getUniCodeCity());
+            buttonListCityString.add(cities.get(count).getCity() + " " + cities.get(count).getUniCodeCity());
             buttonListCityData.add(cities.get(count).getCity());
             buttonList.add(1);
         }
-        buttonListCity.add("Меню \uD83D\uDD79");
+        buttonListCityString.add("Меню \uD83D\uDD79");
         buttonListCityData.add("menu");
         buttonList.add(1);
         return SendMessage.builder()
                 .chatId(message.getChatId())
                 .text("Выберите город \uD83C\uDF0E")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        buttonListCity,
+                        buttonListCityString,
                         buttonList,
                         buttonListCityData
                 ))

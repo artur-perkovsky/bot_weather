@@ -32,6 +32,7 @@ public class Bot extends TelegramWebhookBot {
                 new BotCommand("/start", "start bot"),
                 new BotCommand("/menu", "menu"),
                 new BotCommand("/city", "city"),
+                new BotCommand("/notification", "notification"),
                 new BotCommand("/help", "help")
         );
         try {

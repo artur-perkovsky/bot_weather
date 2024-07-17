@@ -6,6 +6,7 @@ import com.telegramBot.bot_weather.repository.UserRepo;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
 import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
+import com.telegramBot.bot_weather.service.manager.NotificationManager;
 import com.telegramBot.bot_weather.service.manager.WeatherManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.FileNotFoundException;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class CallbackQueryHandler extends AbstractHandler {
     private final MainManager mainManager;
     private final CityManager cityManager;
     private final WeatherManager weatherManager;
+    private final NotificationManager notificationManager;
     private final UserRepo userRepo;
 
     @Override
@@ -43,6 +43,11 @@ public class CallbackQueryHandler extends AbstractHandler {
                /* user.setUserStatus(UserStatus.WEATHER);
                 userRepo.save(user);*/
                 return weatherManager.answerQuery(query, wordsDataQuery, bot);
+            }
+            case "notification" ->{
+                user.setUserStatus(UserStatus.NOTIFICATION);
+                userRepo.save(user);
+                return notificationManager.answerQuery(query, wordsDataQuery, bot);
             }
             default -> {
                 return cityManager.answerQuery(query, wordsDataQuery, bot);

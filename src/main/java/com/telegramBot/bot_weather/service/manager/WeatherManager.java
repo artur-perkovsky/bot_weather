@@ -139,4 +139,23 @@ public class WeatherManager implements QueryListener {
                 ))
                 .build();
     }
+
+    public BotApiMethod<?> notificationWeather() {
+        weather = apiService.getTodayWeather("Гродно");
+        return SendMessage.builder()
+                .chatId(Long.valueOf(848274388))
+                .text("Погода на : " + weather.getForecast().getForecastDay().get(0).getData() + "\n" +
+                        "Температура днём: " + weather.getForecast().getForecastDay().get(0).getDay().getMaxTemp() + "\n" +
+                        "Температура ночью: " + weather.getForecast().getForecastDay().get(0).getDay().getMinTemp() + "\n" +
+                        "Состояние: " + weather.getForecast().getForecastDay().get(0).getDay().getCondition().getText() + "\n" +
+                        "Поры ветра: " + weather.getForecast().getForecastDay().get(0).getDay().getMaxwind() + " км.ч \n" +
+                        "Осадки: " + weather.getForecast().getForecastDay().get(0).getDay().getTotalprecip() + " мм \n"
+                )
+                .replyMarkup(keyboardFactory.createInlineKeyboard(
+                        List.of("Меню \uD83D\uDD79"),
+                        List.of(1),
+                        List.of(DataQuery.menu.name())
+                ))
+                .build();
+    }
 }

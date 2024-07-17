@@ -1,16 +1,16 @@
 package com.telegramBot.bot_weather.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "cities")
 public class City {
 
@@ -32,7 +32,8 @@ public class City {
     @JoinColumn(name = "user_id")
     private User userId;
 
-    public City() {
+    @OneToMany
+    @JoinColumn(name = "nitification_id")
+    private Set<Notification> notifications;
 
-    }
 }

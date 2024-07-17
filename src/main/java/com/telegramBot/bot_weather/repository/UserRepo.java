@@ -9,6 +9,4 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     User findByChatID(Long chatId);
 
-    boolean existsByChatID(Long chatId);
-
 }
