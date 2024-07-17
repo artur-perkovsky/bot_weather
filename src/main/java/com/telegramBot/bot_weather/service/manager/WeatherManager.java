@@ -65,7 +65,7 @@ public class WeatherManager implements QueryListener {
                 .chatId(message.getChatId())
                 .text("Погода")
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
-                        List.of("Текущая погодаh",
+                        List.of("Текущая погода",
                                 "На сегодня",
                                 "Прогноз на 3 дня"),
                         List.of(1, 1, 1),
