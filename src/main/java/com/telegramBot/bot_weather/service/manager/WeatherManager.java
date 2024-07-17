@@ -90,7 +90,7 @@ public class WeatherManager implements QueryListener {
                         "Состояние: " + weather.getCurrent().getCondition().getText() + "\n" +
                         "Влажность: " + weather.getCurrent().getHumidity() + " %" + "\n" +
                         "Облачность: " + weather.getCurrent().getCloud() + " %" + "\n" +
-                        "Осадки: " + weather.getCurrent().getPrecip() + " мм"
+                        "Осадкиg: " + weather.getCurrent().getPrecip() + " мм"
                 )
                 .replyMarkup(keyboardFactory.createInlineKeyboard(
                         List.of("Меню"),
