@@ -1,12 +1,11 @@
 package com.telegramBot.bot_weather.service.hendler;
 
 import com.telegramBot.bot_weather.bot.Bot;
-import com.telegramBot.bot_weather.entity.UserStatus;
 import com.telegramBot.bot_weather.repository.UserRepo;
-import com.telegramBot.bot_weather.service.APIService;
 import com.telegramBot.bot_weather.service.contract.AbstractHandler;
+import com.telegramBot.bot_weather.service.manager.CityManager;
 import com.telegramBot.bot_weather.service.manager.MainManager;
-import com.telegramBot.bot_weather.service.manager.UnsupportedCommandManage;
+import com.telegramBot.bot_weather.service.manager.UnsupportedCommandManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,29 +19,29 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class MessageHandler extends AbstractHandler {
 
     private final MainManager mainManager;
-    private final UnsupportedCommandManage unsupportedCommandManage;
-    private final APIService apiService;
+    private final CityManager cityManager;
+    private final UnsupportedCommandManager unsupportedCommandManage;
     private final UserRepo userRepo;
-    private UserStatus userStatus;
 
     @Override
-    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) {
+    public BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot ) {
         var message = (Message) botApiObject;
         var user = userRepo.findByChatID(message.getChatId());
+        String[] wordsUserStatus = user.getUserStatus().name().split("_");
 
-        try {
-            switch (user.getUserStatus()) {
-                case CITY -> {
-                    String city = message.getText();
-                    return apiService.checkCity(message, city, bot);
+        if (message != null) {
+            switch (wordsUserStatus[0]) {
+                case "CITY" -> {
+                    return cityManager.answerMessage(message, wordsUserStatus);
                 }
-                case MENU -> {
-                    return unsupportedCommandManage.answer(message, bot);
+                case "MENU" -> {
+                    return unsupportedCommandManage.answer(message);
+                }
+                case "WEATHER" -> {
+                    return unsupportedCommandManage.answer(message);
                 }
             }
-        } catch (NullPointerException e) {
-            log.info("exeption Status" + e);
         }
-        return mainManager.answerCommand(message, bot);
+        return null;
     }
 }

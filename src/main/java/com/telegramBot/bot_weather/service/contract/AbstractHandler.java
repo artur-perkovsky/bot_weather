@@ -4,9 +4,10 @@ import com.telegramBot.bot_weather.bot.Bot;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 public abstract class AbstractHandler {
 
-    public abstract BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot);
+    public abstract BotApiMethod<?> answer(BotApiObject botApiObject, Bot bot) throws TelegramApiException;
 }

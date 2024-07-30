@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CityService {
@@ -21,10 +23,10 @@ public class CityService {
         this.city = city;
     }
 
-    public BotApiMethod<?> saveNewCity(Message message, Bot bot) {
-        if (userRepo.findByChatID(message.getChatId()) != null) {
+    public BotApiMethod<?> saveNewCity(Message message) {
+        var user = userRepo.findByChatID(message.getChatId());
+        if (user != null) {
             if (!cityRepo.existsByCity(this.city)) {
-                var user = userRepo.findByChatID(message.getChatId());
                 Long id = cityRepo.save(
                         City.builder()
                                 .userId(user)
@@ -32,6 +34,35 @@ public class CityService {
                                 .build()
                 ).getId();
             }
+        }
+        return null;
+    }
+
+    public String allCityResponseMessage(Message message) {
+        var user = userRepo.findByChatID(message.getChatId());
+        List<City> cities = cityRepo.findByUserId(user);
+        String messageResponse = "";
+
+        for (City cityCount : cities) {
+            messageResponse = messageResponse + "Город: " + cityCount.getCity() + "\n";
+        }
+        return messageResponse;
+    }
+
+
+    public boolean  chekCityDelete(Message message) {
+        City city = cityRepo.findByCity(message.getText());
+        if (city != null){
+            this.city = city.getCity();
+        }
+        return city != null;
+    }
+
+    public String deleteCity(Message message) {
+        if (this.city != null) {
+            City city = cityRepo.findByCity(this.city);
+            cityRepo.delete(city);
+            return city.getCity();
         }
         return null;
     }
